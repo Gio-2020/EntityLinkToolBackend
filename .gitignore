@@ -3,4 +3,5 @@ ccks2019_el/
 
 static/
 __pycache__/
+temp/__pycache__/
 temp/migrations/000*.py
