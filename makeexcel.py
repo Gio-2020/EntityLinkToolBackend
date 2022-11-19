@@ -1,3 +1,4 @@
+# excel生成脚本
 import os
 import json
 import time
@@ -14,11 +15,11 @@ def makeexcel():
     else:
         print('todo')
     wb = xlsxwriter.Workbook(dest_filename)
-    ws = wb.add_worksheet('Menu')
+    ws = wb.add_worksheet('trainingset')
     row_num = 0
     # 设置表头
     columns = ['auto_increment_id', 'segment_id', 'text', 'entity',
-                'entity_kb',]
+                'entity_kb','data']
     for col_num in range(len(columns)):
     	#表头写入第一行
         ws.write(row_num, col_num, columns[col_num])
@@ -32,13 +33,21 @@ def makeexcel():
         # print(row)
         for col_num in range(len(row)):
             # ws.write(row_num, col_num, row[col_num])
+            pairs = ''
             temp = KB.objects.get(subject_id = row[4])
+            data = temp.data
+            for i in data:
+                pairs += i['predicate']
+                pairs += ':'
+                pairs += i['object']
+                pairs += '|'
             ws.write(row_num, 0, row[0])
             ws.write(row_num, 1, row[1])
             ws.write(row_num, 2, row[2])
             ws.write(row_num, 3, row[3])
             ws.write(row_num, 4, temp.subject)
-            # ws.write(row_num, 5, temp.data)
+            ws.write(row_num, 5, pairs)
+        # break
     wb.close()
     return
 if __name__ == "__main__":
