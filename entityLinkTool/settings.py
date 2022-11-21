@@ -48,6 +48,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    # 'django.middleware.transaction.TransactionMiddleware',
+    
 ]
 
 ROOT_URLCONF = 'entityLinkTool.urls'
@@ -89,6 +91,7 @@ DATABASES = {
  'PASSWORD': '123456', # 密码
  'HOST': 'localhost', # 主机
  'PORT': '3306', # 数据库使用的端口
+ 'OPTIONS': {'charset': 'utf8mb4'},
  }
  }
 

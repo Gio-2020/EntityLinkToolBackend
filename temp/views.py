@@ -4,31 +4,32 @@ from io import BytesIO
 from django.forms import model_to_dict
 from .models import KB, TrainingSet
 import xlsxwriter
-import json, os, pathlib
+import json, os, pathlib, xlrd
+import pandas as pd
 # Create your views here.
 
 # 测试接口
-def getTable(request):
-    try:
-        requestData = json.loads(request.body.decode('utf-8'))
-        segment_id = requestData['segment_id']
-        print(segment_id)
-        test = TrainingSet.objects.filter(segment_id = segment_id)
-    except:
-        test = TrainingSet.objects.filter(segment_id = '20000')
-    # sample = {'text': test[0].text, 'auto_increment_id': }
-    data = []
-    # sample.text = test[0].text
-    # sample.segment_id = test[0].segment_id
-    # print(test[0].text)
-    for i in test:
-        temp = {'text': i.text, 'auto_increment_id': i.auto_increment_id,
-        'segment_id': i.segment_id, 'entity': i.entity, 
-        'entity_kb': i.entity_kb.subject, 'entity_property': i.entity_kb.data
-        }
-        data.append(temp)
-    the_response = {'errorCode': 200,'data': data}
-    return JsonResponse(the_response)
+# def getTable(request):
+#     try:
+#         requestData = json.loads(request.body.decode('utf-8'))
+#         segment_id = requestData['segment_id']
+#         print(segment_id)
+#         test = TrainingSet.objects.filter(segment_id = segment_id)
+#     except:
+#         test = TrainingSet.objects.filter(segment_id = '20000')
+#     # sample = {'text': test[0].text, 'auto_increment_id': }
+#     data = []
+#     # sample.text = test[0].text
+#     # sample.segment_id = test[0].segment_id
+#     # print(test[0].text)
+#     for i in test:
+#         temp = {'text': i.text, 'auto_increment_id': i.auto_increment_id,
+#         'segment_id': i.segment_id, 'entity': i.entity, 
+#         'entity_kb': i.entity_kb.subject, 'entity_property': i.entity_kb.data
+#         }
+#         data.append(temp)
+#     the_response = {'errorCode': 200,'data': data}
+#     return JsonResponse(the_response)
 
 # excel下载接口
 def getExcel(request):
@@ -122,3 +123,27 @@ def getExcel(request):
 #     res.write(x_io.getvalue())
 #     print(res)
 #     return res
+
+
+def getTable(request):
+    data = []
+    try:
+        paper_file = request.FILES.get('trainingset')
+    except:
+        return JsonResponse({'errorCode': 400,'data': None, 'message': 'file not found'})
+    # print(type(paper_file))
+    df = pd.read_excel(paper_file)
+    num_row, num_col = df.shape
+    print(num_row, num_col)
+    for row in range(num_row):
+        temp = {'auto_increment_id': str(df.iloc[row][0]), 
+                'segment_id': str(df.iloc[row][1]),
+                'text': df.iloc[row][2], 
+                'entity': df.iloc[row][3],
+                'entity_kb': df.iloc[row][4],
+                'data': df.iloc[row][5]}
+        if type(df.iloc[row][5]) == float:
+            temp['data'] = None
+        data.append(temp)
+    the_response = {'errorCode': 200, 'message': 'success', 'data': data}
+    return JsonResponse(the_response)
