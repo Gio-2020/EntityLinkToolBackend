@@ -129,10 +129,11 @@ def getTable(request):
     data = []
     try:
         paper_file = request.FILES.get('trainingset')
+        df = pd.read_excel(paper_file)
     except:
         return JsonResponse({'errorCode': 400,'data': None, 'message': 'file not found'})
     # print(type(paper_file))
-    df = pd.read_excel(paper_file)
+    # df = pd.read_excel(paper_file)
     num_row, num_col = df.shape
     print(num_row, num_col)
     for row in range(num_row):
