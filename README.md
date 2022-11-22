@@ -1,4 +1,15 @@
-# EntityLinkTool
+# EntityLinkToolBackend
+## 常用命令
+## docker启动
+sudo docker-compose up -d  
+sudo docker-compose up
+## 更新代码后重新安装环境
+sudo docker-compose up --build -d
+## 进入容器命令行
+sudo docker-compose exec web sh    
+sudo docker-compose exec mysql sh
+## 查看容器状态
+sudo docker ps
 ## django配置数据库
 python manage.py makemigrations  
 python manage.py migrate
