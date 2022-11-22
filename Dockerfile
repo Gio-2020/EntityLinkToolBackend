@@ -6,4 +6,4 @@ WORKDIR /TestServer
 
 RUN pip install -r requirements.txt -i https://mirrors.aliyun.com/pypi/simple/
 
-CMD python manage.py runserver 0.0.0.0:8282
+# CMD python manage.py runserver 0.0.0.0:8282

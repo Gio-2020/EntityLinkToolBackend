@@ -1,22 +1,6 @@
-version: '3.8.13'
+version: '3.3'
 
 services:
-  web:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    image: web
-    container_name: web
-    hostname: web
-    restart: always
-    # command: python /code/manage.py runserver 0.0.0.0:8000
-    volumes:
-      - .:/web
-    ports:
-      - "8000:8000"
-    depends_on:
-      - mysql  
-
   mysql:
     image: mysql
     container_name: mysql
@@ -31,7 +15,22 @@ services:
       - MYSQL_HOST=localhost 
       - MYSQL_PORT=3306 
       - MYSQL_DATABASE=mytest
-      - MYSQL_USER=root
-      - MYSQL_PASSWORD=123456
+      # - MYSQL_USER=root
+      # - MYSQL_PASSWORD=123456
       - MYSQL_ROOT_PASSWORD=123456
 
+web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: web
+    container_name: web
+    hostname: web
+    restart: always
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/web
+    ports:
+      - "8000:8000"
+    depends_on:
+      - mysql  
