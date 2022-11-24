@@ -137,7 +137,7 @@ def getTable(request):
     num_row, num_col = df.shape
     print(num_row, num_col)
     for row in range(num_row):
-        temp = {'auto_increment_id': str(df.iloc[row][0]), 
+        temp = {'self_defining_id': str(df.iloc[row][0]), 
                 'segment_id': str(df.iloc[row][1]),
                 'text': df.iloc[row][2], 
                 'entity': df.iloc[row][3],
@@ -148,3 +148,36 @@ def getTable(request):
         data.append(temp)
     the_response = {'errorCode': 200, 'message': 'success', 'data': data}
     return JsonResponse(the_response)
+
+def saveSingleTrainingData(request):
+    pass
+
+def saveTrainingSet(request):
+    try:
+        requestData = json.loads(request.body.decode('utf-8'))
+        trainingData = requestData['trainingData']
+        print(type(trainingData))
+        for single in trainingData:
+            # print(type(single))
+            TrainingSet.objects.create(segment_id = single['segment_id'],
+            text = single['text'], entity = single['entity'],
+            subject = single['entity_kb'], entity_description = single['data'])
+            # break
+        return JsonResponse({'error_code': 200, 'message': 'success'})
+    except:
+        return JsonResponse({'error_code': 400, 'message': 'failure'})
+
+def reviceSingleTrainingData(request):
+    try:
+        requestData = json.loads(request.body.decode('utf-8'))
+        singleTrainingData = requestData['singleTrainingData']
+        temp = TrainingSet.objects.get(auto_increment_id = singleTrainingData['auto_increment_id'])
+        temp.segment_id = singleTrainingData['segment_id']
+        temp.text = singleTrainingData['text']
+        temp.entity = singleTrainingData['entity']
+        temp.subject = singleTrainingData['entity_kb']
+        temp.entity_description = singleTrainingData['data']
+        temp.save()
+        return JsonResponse({'error_code': 200, 'message': 'success'})
+    except:
+        return JsonResponse({'error_code': 400, 'message': 'failure'})

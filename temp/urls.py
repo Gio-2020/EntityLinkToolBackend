@@ -3,5 +3,8 @@ from . import views
 urlpatterns = [
     path('getTable', views.getTable),
     # path('getExcel', views.getExcel),
-    path('getExcel', views.getExcel)
+    path('getExcel', views.getExcel),
+    path('saveSingleTrainingData', views.saveSingleTrainingData),
+    path('saveTrainingSet', views.saveTrainingSet),
+    path('reviceSingleTrainingData', views.reviceSingleTrainingData)
 ]
