@@ -181,3 +181,29 @@ def reviceSingleTrainingData(request):
         return JsonResponse({'error_code': 200, 'message': 'success'})
     except:
         return JsonResponse({'error_code': 400, 'message': 'failure'})
+
+def deleteSingleTrainingData(request):
+    try:
+        requestData = json.loads(request.body.decode('utf-8'))
+        auto_increment_id = requestData['auto_increment_id']
+        obj = TrainingSet.objects.get(auto_increment_id = auto_increment_id)
+        obj.delete()
+        return JsonResponse({'error_code': 200, 'message': 'success'})
+    except:
+        return JsonResponse({'error_code': 400, 'message': 'failure'})
+
+def searchKnowledgeBaseByName(request):
+    try:
+        requestData = json.loads(request.body.decode('utf-8'))
+        entityName = requestData['entityName']
+        obj = KB.objects.filter(subject = entityName)
+        data = []
+        for single in obj:
+            temp = {'alias': single.alias, 'subject': single.subject,
+            'type': single.type, 'data': single.data}
+            data.append(temp)
+        return JsonResponse({'error_code': 200, 'message': 'success',
+            'data': data})
+    except:
+         return JsonResponse({'error_code': 400, 'message': 'failure'})
+       
