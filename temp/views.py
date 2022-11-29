@@ -157,13 +157,20 @@ def saveTrainingSet(request):
         requestData = json.loads(request.body.decode('utf-8'))
         trainingData = requestData['trainingData']
         print(type(trainingData))
+        min_index = -1
+        max_index = -1
         for single in trainingData:
             # print(type(single))
-            TrainingSet.objects.create(segment_id = single['segment_id'],
+            temp = TrainingSet.objects.create(segment_id = single['segment_id'],
             text = single['text'], entity = single['entity'],
             subject = single['entity_kb'], entity_description = single['data'])
+            if trainingData.index(single) == 0:
+                min_index = temp.auto_increment_id
+            if trainingData.index(single) == -1:
+                max_index = temp.auto_increment_id            
             # break
-        return JsonResponse({'error_code': 200, 'message': 'success'})
+        return JsonResponse({'error_code': 200, 'message': 'success',
+        'data': {'min': min_index, 'max': max_index}})
     except:
         return JsonResponse({'error_code': 400, 'message': 'failure'})
 
