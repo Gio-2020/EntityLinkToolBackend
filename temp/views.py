@@ -166,7 +166,7 @@ def saveTrainingSet(request):
             subject = single['entity_kb'], entity_description = single['data'])
             if trainingData.index(single) == 0:
                 min_index = temp.auto_increment_id
-            if trainingData.index(single) == -1:
+            if trainingData.index(single) == len(trainingData) - 1:
                 max_index = temp.auto_increment_id            
             # break
         return JsonResponse({'error_code': 200, 'message': 'success',
