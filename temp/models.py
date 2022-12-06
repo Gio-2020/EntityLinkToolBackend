@@ -16,4 +16,5 @@ class TrainingSet(models.Model):
     entity = models.CharField(max_length = 100, verbose_name = '抽取出的实体')
     subject = models.CharField(max_length = 100, verbose_name = '知识库中对应实体名称', default = None) # 知识库没有对应则为空
     entity_description = models.JSONField(default = list, verbose_name = '实体描述') # 知识库没有对应则为空
+    training_set_name = models.CharField(max_length = 100, verbose_name = '所属训练集名称', default = '')
     # entity_kb = models.ForeignKey(KB, on_delete = models.CASCADE)

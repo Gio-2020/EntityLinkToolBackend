@@ -156,14 +156,16 @@ def saveTrainingSet(request):
     try:
         requestData = json.loads(request.body.decode('utf-8'))
         trainingData = requestData['trainingData']
-        print(type(trainingData))
+        trainingSetName = requestData['trainingSetName']
+        # print(type(trainingData))
         min_index = -1
         max_index = -1
         for single in trainingData:
             # print(type(single))
             temp = TrainingSet.objects.create(segment_id = single['segment_id'],
             text = single['text'], entity = single['entity'],
-            subject = single['entity_kb'], entity_description = single['data'])
+            subject = single['entity_kb'], entity_description = single['data'],
+            training_set_name = trainingSetName)
             if trainingData.index(single) == 0:
                 min_index = temp.auto_increment_id
             if trainingData.index(single) == len(trainingData) - 1:
@@ -192,6 +194,7 @@ def reviceSingleTrainingData(request):
 def deleteSingleTrainingData(request):
     try:
         requestData = json.loads(request.body.decode('utf-8'))
+        # trainingSetName = requestData['trainingSetName']
         auto_increment_id = requestData['auto_increment_id']
         obj = TrainingSet.objects.get(auto_increment_id = auto_increment_id)
         obj.delete()
@@ -214,3 +217,21 @@ def searchKnowledgeBaseByName(request):
     except:
          return JsonResponse({'error_code': 400, 'message': 'failure'})
        
+# def testAddTable(request):
+#     # requestData = json.loads(request.body.decode('utf-8'))
+#     # trainingData = requestData['trainingData']
+#     # trainingSetName = requestData['trainingSetName']
+#     con = pymysql.connect(host='localhost', user='root',
+#                       passwd='123456', database='mytest')
+#     cur = con.cursor()
+#     # cur.execute("use mytest;")
+#     sql = """CREATE TABLE EMPLOYEE (
+#          FIRST_NAME  CHAR(20) NOT NULL,
+#          LAST_NAME  CHAR(20),
+#          AGE INT,  
+#          SEX CHAR(1),
+#          INCOME FLOAT )"""
+#     cur.execute(sql)
+#     con.close()
+
+#     return JsonResponse({'error_code': 200, 'message': 'success'})
