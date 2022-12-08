@@ -9,5 +9,6 @@ urlpatterns = [
     path('reviceSingleTrainingData', views.reviceSingleTrainingData),
     path('deleteSingleTrainingData', views.deleteSingleTrainingData),
     path('searchKnowledgeBaseByName', views.searchKnowledgeBaseByName),
+    path('getTrainingSet', views.getTrainingSet)
     # path('testAddTable', views.testAddTable)
 ]
