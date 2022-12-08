@@ -237,21 +237,21 @@ def searchKnowledgeBaseByName(request):
 #     return JsonResponse({'error_code': 200, 'message': 'success'})
 
 def getTrainingSet(request):
-    # try:
-    requestData = json.loads(request.body.decode('utf-8'))
-    trainingSetName = requestData['trainingSetName']
-    trainingSet = TrainingSet.objects.filter(training_set_name = trainingSetName)
-    # print(type(trainingSetName))
-    data = []
-    for i in trainingSet:
-        temp = {'segment_id': None, 'text': None, 'entity': None,
-        'subject': None, 'entity_description': None}
-        temp['segment_id'] = i.segment_id
-        temp['text'] = i.text
-        temp['entity'] = i.entity
-        temp['subject'] = i.subject
-        temp['entity_description'] = i.entity_description
-        data.append(temp) 
-    return JsonResponse({'error_code': 200, 'message': 'success', 'data': data})
-    # except:
-    #      return JsonResponse({'error_code': 400, 'message': 'failure'})
+    try:
+        requestData = json.loads(request.body.decode('utf-8'))
+        trainingSetName = requestData['trainingSetName']
+        trainingSet = TrainingSet.objects.filter(training_set_name = trainingSetName)
+        # print(type(trainingSetName))
+        data = []
+        for i in trainingSet:
+            temp = {'segment_id': None, 'text': None, 'entity': None,
+            'subject': None, 'entity_description': None}
+            temp['segment_id'] = i.segment_id
+            temp['text'] = i.text
+            temp['entity'] = i.entity
+            temp['subject'] = i.subject
+            temp['entity_description'] = i.entity_description
+            data.append(temp) 
+        return JsonResponse({'error_code': 200, 'message': 'success', 'data': data})
+    except:
+         return JsonResponse({'error_code': 400, 'message': 'failure'})
