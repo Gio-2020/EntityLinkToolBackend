@@ -5,3 +5,4 @@ static/
 __pycache__/
 temp/__pycache__/
 temp/migrations/00**.py
+db/
