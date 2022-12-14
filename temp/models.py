@@ -18,3 +18,12 @@ class TrainingSet(models.Model):
     entity_description = models.JSONField(default = list, verbose_name = '实体描述') # 知识库没有对应则为空
     training_set_name = models.CharField(max_length = 100, verbose_name = '所属训练集名称', default = '')
     # entity_kb = models.ForeignKey(KB, on_delete = models.CASCADE)
+
+class TrainingRecord(models.Model):
+    auto_increment_id = models.AutoField(primary_key = True, verbose_name = '自增id')
+    knowleage_base = models.CharField(max_length = 20, verbose_name = '知识库名称')
+    dataset = models.CharField(max_length = 20, verbose_name = '数据集名称')
+    dataset_partition = models.JSONField(default = list, verbose_name = '数据集划分')
+    model = models.CharField(max_length = 20, verbose_name = '模型')
+    hyperparameters = models.JSONField(default = list, verbose_name = '超参数')
+    result = models.JSONField(default = list, verbose_name = '训练结果')

@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse, request, JsonResponse, FileResponse
 from io import BytesIO
 from django.forms import model_to_dict
-from .models import KB, TrainingSet
+from .models import KB, TrainingSet, TrainingRecord
 import xlsxwriter
 import json, os, pathlib, xlrd
 import pandas as pd
@@ -255,3 +255,19 @@ def getTrainingSet(request):
         return JsonResponse({'error_code': 200, 'message': 'success', 'data': data})
     except:
          return JsonResponse({'error_code': 400, 'message': 'failure'})
+
+def dataSetPartition(request):
+    requestData = json.loads(request.body.decode('utf-8'))
+    dataSetName = requestData['dataSetName']
+    trainingSetPartition = requestData['trainingSetPartition']
+    validationSetPartition = requestData['validationSetPartition']
+    testSetPartition = requestData['testSetPartition']
+    dataset_partition = [trainingSetPartition, validationSetPartition, testSetPartition]
+    temp = TrainingRecord.objects.create(dataset = dataSetName, dataset_partition = dataset_partition)
+    dataset = TrainingSet.objects.filter(training_set_name = dataSetName)
+    print(len(dataset))    
+    
+    auto_increment_id = temp.auto_increment_id
+    data = {'auto_increment_id': auto_increment_id}
+
+    return JsonResponse({'error_code': 200, 'message': 'success', 'data': data})
