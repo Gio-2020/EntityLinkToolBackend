@@ -274,7 +274,8 @@ def dataSetPartition(request):
 
 def getDataset(request):
     data = []
-    dataset_name_list = list(TrainingSet.objects.values_list('training_set_name', flat = True))
+    dataset_name_list = list(set(list(TrainingSet.objects.values_list('training_set_name', flat = True))))
+    print(dataset_name_list)
     for i in dataset_name_list:
         temp = {'dataset_name': None, 'size': None}
         temp['dataset_name'] = i
