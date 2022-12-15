@@ -271,3 +271,20 @@ def dataSetPartition(request):
     data = {'auto_increment_id': auto_increment_id}
 
     return JsonResponse({'error_code': 200, 'message': 'success', 'data': data})
+
+def getDataset(request):
+    data = []
+    dataset_name_list = list(TrainingSet.objects.values_list('training_set_name', flat = True))
+    for i in dataset_name_list:
+        temp = {'dataset_name': None, 'size': None}
+        temp['dataset_name'] = i
+        temp['size'] = TrainingSet.objects.filter(training_set_name = i).count()
+        data.append(temp)
+    return JsonResponse({'error_code': 200, 'message': 'success', 'data': data})
+def deleteDataset(request):
+    requestData = json.loads(request.body.decode('utf-8'))
+    dataset_to_delete = requestData['dataset_name']
+    temp = TrainingSet.objects.filter(training_set_name = dataset_to_delete)
+    temp.delete()
+    return JsonResponse({'error_code': 200, 'message': 'successfully deleted'})
+

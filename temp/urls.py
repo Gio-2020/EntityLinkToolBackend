@@ -12,6 +12,10 @@ urlpatterns = [
     path('getTrainingSet', views.getTrainingSet),
     # path('testAddTable', views.testAddTable)
     
+
+    path('getDataset', views.getDataset),
+    path('deleteDataset', views.deleteDataset),
+
     path('dataSetPartition', views.dataSetPartition)
     
 ]
