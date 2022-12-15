@@ -276,7 +276,7 @@ def getDataset(request):
     try:
         data = []
         dataset_name_list = list(set(list(TrainingSet.objects.values_list('training_set_name', flat = True))))
-        print(dataset_name_list)
+        print(dataset_name_list, flush = True)
         for i in dataset_name_list:
             temp = {'dataset_name': None, 'size': None}
             temp['dataset_name'] = i
@@ -291,6 +291,8 @@ def deleteDataset(request):
         requestData = json.loads(request.body.decode('utf-8'))
         dataset_to_delete = requestData['dataset_name']
         temp = TrainingSet.objects.filter(training_set_name = dataset_to_delete)
+        if temp is None:
+            return JsonResponse({'error_code': 201, 'message': 'dataset not exists'})
         temp.delete()
         return JsonResponse({'error_code': 200, 'message': 'successfully deleted'})
     except:
