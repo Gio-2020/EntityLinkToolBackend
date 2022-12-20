@@ -20,3 +20,5 @@ python loadtrainingset.py
 python makeexcel.py
 ## 启动django
 python manage.py runserver
+## mysql命令
+mysqlsh --user root --host localhost --port 3306

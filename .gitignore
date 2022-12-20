@@ -6,3 +6,4 @@ __pycache__/
 temp/__pycache__/
 temp/migrations/00**.py
 db/
+test_data/
