@@ -22,3 +22,5 @@ python makeexcel.py
 python manage.py runserver
 ## mysql命令
 mysqlsh --user root --host localhost --port 3306
+## 数据库迁移的问题
+不行的话直接删库。。。。然后创建个空的重新导入数据

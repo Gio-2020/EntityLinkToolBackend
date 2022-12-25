@@ -27,3 +27,4 @@ class TrainingRecord(models.Model):
     model = models.CharField(max_length = 20, verbose_name = '模型')
     hyperparameters = models.JSONField(default = list, verbose_name = '超参数')
     result = models.JSONField(default = list, verbose_name = '训练结果')
+    training_record_name = models.CharField(max_length = 20, unique = True, verbose_name = '训练模型名称')

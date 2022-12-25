@@ -6,6 +6,7 @@ from .models import KB, TrainingSet, TrainingRecord
 import xlsxwriter
 import json, os, pathlib, xlrd
 import pandas as pd
+from django.db.models import Max, Min
 # Create your views here.
 
 # 测试接口
@@ -258,12 +259,18 @@ def getTrainingSet(request):
 
 def dataSetPartition(request):
     requestData = json.loads(request.body.decode('utf-8'))
+    trainingRecordName = requestData['trainingRecordName']
     dataSetName = requestData['dataSetName']
     trainingSetPartition = requestData['trainingSetPartition']
     validationSetPartition = requestData['validationSetPartition']
     testSetPartition = requestData['testSetPartition']
     dataset_partition = [trainingSetPartition, validationSetPartition, testSetPartition]
-    temp = TrainingRecord.objects.create(dataset = dataSetName, dataset_partition = dataset_partition)
+    try:
+        temp = TrainingRecord.objects.create(dataset = dataSetName, dataset_partition = dataset_partition,
+        training_record_name = trainingRecordName)
+    except:
+        return JsonResponse({'error_code': 400, 'message': '训练模型名称已存在，请重命名', 'data': None})
+
     dataset = TrainingSet.objects.filter(training_set_name = dataSetName)
     print(len(dataset))    
     
@@ -273,18 +280,23 @@ def dataSetPartition(request):
     return JsonResponse({'error_code': 200, 'message': 'success', 'data': data})
 
 def getDataset(request):
-    try:
-        data = []
-        dataset_name_list = list(set(list(TrainingSet.objects.values_list('training_set_name', flat = True))))
-        print(dataset_name_list, flush = True)
-        for i in dataset_name_list:
-            temp = {'dataset_name': None, 'size': None}
-            temp['dataset_name'] = i
-            temp['size'] = TrainingSet.objects.filter(training_set_name = i).count()
-            data.append(temp)
-        return JsonResponse({'error_code': 200, 'message': 'success', 'data': data})
-    except:
-        return JsonResponse({'error_code': 400, 'message': 'error'})
+    # try:
+    data = []
+    dataset_name_list = list(set(list(TrainingSet.objects.values_list('training_set_name', flat = True))))
+    print(dataset_name_list, flush = True)
+    for i in dataset_name_list:
+        temp = {'dataset_name': None, 'size': None}
+        temp['dataset_name'] = i
+        # temp['size'] = TrainingSet.objects.filter(training_set_name = i).count()
+        dataset_filter = TrainingSet.objects.filter(training_set_name = i)
+        max_auto_increment_id = dataset_filter.aggregate(Max('auto_increment_id'))
+        min_auto_increment_id = dataset_filter.aggregate(Min('auto_increment_id')) 
+        print(max_auto_increment_id, flush = True) 
+        temp['size'] = int(max_auto_increment_id['auto_increment_id__max']) - int(min_auto_increment_id['auto_increment_id__min']) + 1
+        data.append(temp)
+    return JsonResponse({'error_code': 200, 'message': 'success', 'data': data})
+    # except:
+    #     return JsonResponse({'error_code': 400, 'message': 'error'})
 
 def deleteDataset(request):
     try:
