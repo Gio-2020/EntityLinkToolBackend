@@ -207,11 +207,15 @@ def searchKnowledgeBaseByName(request):
     try:
         requestData = json.loads(request.body.decode('utf-8'))
         entityName = requestData['entityName']
-        obj = KB.objects.filter(subject = entityName)
+        obj = KB.objects.filter(subject = entityName).values('subject', 'subject_id')
         data = []
-        for single in obj:
-            temp = {'alias': single.alias, 'subject': single.subject,
-            'type': single.type, 'data': single.data}
+        for i in obj:
+            print(i, flush = True)
+            entity = KB.objects.get(pk = i['subject_id'])
+            # temp = {'alias': single.alias, 'subject': single.subject,
+            # 'type': single.type, 'data': single.data}
+            temp = {'alias': entity.alias, 'subject': entity.subject,
+            'type': entity.type, 'data': entity.data}
             data.append(temp)
         return JsonResponse({'error_code': 200, 'message': 'success',
             'data': data})
@@ -310,4 +314,71 @@ def deleteDataset(request):
     except:
         return JsonResponse({'error_code': 400, 'message': 'error'})
 
+def getTrainingSetting(request):
+    requestData = json.loads(request.body.decode('utf-8'))
+    training_record_name = requestData['trainingRecordName']
+    temp = TrainingRecord.objects.get(training_record_name = training_record_name)
+    if temp is None:
+        return JsonResponse({'error_code': 300, 'message': 'not found', 'data': None})
+    data = {'knowledge_base': None, 'dataset': None, 'dataset_partition': None,
+        "model": None, "hyperparameters": None}
+    data['knowledge_base'] = temp.knowleage_base
+    data['dataset'] = temp.dataset
+    data['dataset_partition'] = temp.dataset_partition
+    data['model'] = temp.model
+    data['hyperparameters'] = temp.hyperparameters
+    return JsonResponse({'error_code': 200, 'message': 'success', 'data': data})
 
+def searchKnowledgeBaseByAlias(request):
+    try:
+        requestData = json.loads(request.body.decode('utf-8'))
+        user_input = requestData['user_input']
+        data = []
+        for i in KB.objects.all().values('alias', 'subject_id'):
+            temp = {}
+            flag = 0
+            for j in i['alias']:
+                if user_input in j:
+                    entity = KB.objects.get(pk = i['subject_id'])
+                    temp['entity'] = entity.subject
+                    temp['entity_id'] = entity.subject_id
+                    temp['type'] = entity.type
+                    temp['data'] = entity.data
+                    data.append(temp)
+                    flag = 1
+                    break
+                if flag == 1:
+                    break
+        return JsonResponse({'error_code': 200, 'message': 'success', 'data': data})
+    except:
+        return JsonResponse({'error_code': 400, 'message': 'error'})
+
+def getAnnotationData(request):
+    try:
+        requestData = json.loads(request.body.decode('utf-8'))
+        model_name = requestData['model_name']
+
+        test_data = [
+            {
+                "auto_increment_id": 1,
+                "raw_text": "小明拉肚子",
+                "entity_to_annotate": "拉肚子",
+            },
+            {
+                "auto_increment_id": 2,
+                "raw_text": "比特币吸粉无数,但央行的心另有所属",
+                "entity_to_annotate": "比特币"
+            }
+        ]
+        return JsonResponse({'error_code': 200, 'message': 'success', 'data': test_data})
+    except:
+        return JsonResponse({'error_code': 400, 'message': 'error'})
+
+def dataAnnotation(request):
+    try:
+        requestData = json.loads(request.body.decode('utf-8'))
+        model_name = requestData['model_name']
+        test_data = request['data']
+        return JsonResponse({'error_code': 200, 'message': 'success'})
+    except:
+        return JsonResponse({'error_code': 400, 'message': 'error'})

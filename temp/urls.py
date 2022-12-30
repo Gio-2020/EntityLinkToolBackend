@@ -16,6 +16,9 @@ urlpatterns = [
     path('getDataset', views.getDataset),
     path('deleteDataset', views.deleteDataset),
 
-    path('dataSetPartition', views.dataSetPartition)
-    
+    path('dataSetPartition', views.dataSetPartition),
+    path('getTrainingSetting', views.getTrainingSetting),
+    path('searchKnowledgeBaseByAlias', views.searchKnowledgeBaseByAlias),
+    path('getAnnotationData', views.getAnnotationData),
+    path('dataAnnotation', views.dataAnnotation)
 ]

@@ -28,3 +28,13 @@ class TrainingRecord(models.Model):
     hyperparameters = models.JSONField(default = list, verbose_name = '超参数')
     result = models.JSONField(default = list, verbose_name = '训练结果')
     training_record_name = models.CharField(max_length = 20, unique = True, verbose_name = '训练模型名称')
+
+# 用于主动学习的标注数据
+class AnnotatedData(models.Model):
+    auto_increment_id = models.AutoField(primary_key = True, verbose_name = '自增id')
+    model_name = models.CharField(max_length = 20, verbose_name = '训练模型名称')
+    segment_id = models.CharField(max_length = 20, verbose_name = '段序号') # train.json中的text_id, 用于判断两条记录是否出自同一文本
+    text = models.CharField(max_length = 100, verbose_name = '原始文本')
+    entity_to_annotate = models.CharField(max_length = 100, verbose_name = '原始文本中待标注的实体')
+    subject = models.CharField(verbose_name = '链接到的知识库实体', max_length = 100)
+    subject_id = models.CharField(max_length = 20, verbose_name = '知识库实体id')
