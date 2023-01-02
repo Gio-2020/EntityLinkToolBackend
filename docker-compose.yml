@@ -18,6 +18,10 @@ services:
       # - MYSQL_USER=root
       # - MYSQL_PASSWORD=123456
       - MYSQL_ROOT_PASSWORD=123456
+    networks:
+        mynet1:
+          ipv4_address: 172.19.0.2
+    
 
   web:
     build:
@@ -36,3 +40,11 @@ services:
       - "8000:8000"
     depends_on:
       - mysql  
+    networks:
+        mynet1:
+          ipv4_address: 172.19.0.3
+networks:
+   mynet1:
+      ipam:
+         config:
+         - subnet: 172.19.0.0/16

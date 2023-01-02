@@ -378,7 +378,7 @@ def dataAnnotation(request):
     try:
         requestData = json.loads(request.body.decode('utf-8'))
         model_name = requestData['model_name']
-        test_data = request['data']
+        test_data = requestData['data']
         return JsonResponse({'error_code': 200, 'message': 'success'})
     except:
         return JsonResponse({'error_code': 400, 'message': 'error'})
