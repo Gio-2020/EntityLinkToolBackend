@@ -24,5 +24,7 @@ urlpatterns = [
     path('getKnowledgeBaseDetails', views.getKnowledgeBaseDetails),
     path('getAllKnowledgeBases', views.getAllKnowledgeBases),
     path('addNegativeSample', views.addNegativeSample),
-    path('getDatasetDetails', views.getDatasetDetails)
+    path('getDatasetDetails', views.getDatasetDetails),
+    path('configCandidateEntityGenerationModel', views.configCandidateEntityGenerationModel),
+    path('configDisambiguationModel', views.configDisambiguationModel)
 ]

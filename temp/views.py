@@ -584,3 +584,48 @@ def getDatasetDetails(request):
     except:
         return JsonResponse({'error_code': 400, 'message': traceback.format_exc(), 'data': {}})
     # data['']
+
+def configCandidateEntityGenerationModel(request):
+    try:
+        request_data = json.loads(request.body.decode('utf-8'))
+        training_record_name = request_data['modelName']
+        approach = request_data['approach']
+        top = int(request_data['top'])
+        training_record = TrainingRecord.objects.get(training_record_name = training_record_name)
+        candidate_entity_generation_model = {'candidate_entity_generation_model': {'approach': approach, 
+                                                                       'top': top}}
+        temp_list = list(training_record.hyperparameters)
+        temp_list.append(candidate_entity_generation_model)
+        training_record.hyperparameters = temp_list
+        training_record.save()
+        return JsonResponse({'error_code': 200, 'message': 'success', 'data':  training_record.hyperparameters})
+
+    except:
+        return JsonResponse({'error_code': 400, 'message': traceback.format_exc(), 'data': {}})
+
+def configDisambiguationModel(request):
+    try:
+        request_data = json.loads(request.body.decode('utf-8'))
+        training_record_name = request_data['modelName']
+        approach = request_data['approach']
+        batch_size = request_data['batchSize']
+        epoch = request_data['epoch']
+        loss = request_data['loss']
+        dropout = request_data['dropout']
+        max_char_length = request_data['maxCharLength']
+        learning_rate = request_data['learningRate']
+        training_record = TrainingRecord.objects.get(training_record_name = training_record_name)
+        disambiguation_model = {'disambiguation_model': {'approach': approach, 
+                                                         'batch_size': batch_size,
+                                                         'epoch': epoch,
+                                                         'loss': loss,
+                                                         'dropout': dropout,
+                                                         'max_char_length': max_char_length,
+                                                         'learning_rate': learning_rate}}
+        temp_list = list(training_record.hyperparameters)
+        temp_list.append(disambiguation_model)
+        training_record.hyperparameters = temp_list
+        training_record.save()
+        return JsonResponse({'error_code': 200, 'message': 'success', 'data':  training_record.hyperparameters})        
+    except:
+        return JsonResponse({'error_code': 400, 'message': traceback.format_exc(), 'data': {}})
